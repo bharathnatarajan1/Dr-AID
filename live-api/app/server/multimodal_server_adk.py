@@ -4,6 +4,7 @@ import base64
 import logging
 import os
 import traceback
+from prompts import symptom_collect_prompt
 
 # Import Google ADK components
 from google.adk.agents import Agent, LiveRequestQueue, LlmAgent
