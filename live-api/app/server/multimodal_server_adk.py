@@ -6,7 +6,7 @@ import os
 import traceback
 
 # Import Google ADK components
-from google.adk.agents import Agent, LiveRequestQueue
+from google.adk.agents import Agent, LiveRequestQueue, LlmAgent
 from google.adk.runners import Runner
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.sessions.in_memory_session_service import InMemorySessionService
@@ -15,6 +15,8 @@ from dotenv import load_dotenv
 
 from google.adk.tools.retrieval.vertex_ai_rag_retrieval import VertexAiRagRetrieval
 from vertexai.preview import rag
+
+from prompts import retrieve_agent_prompt
 
 load_dotenv()
 
@@ -67,14 +69,24 @@ class MultimodalADKServer(BaseWebSocketServer):
         super().__init__(host, port)
 
         # Initialize ADK components
-        self.agent = Agent(
-            name="customer_service_agent",
-            model=MODEL,
-            instruction=SYSTEM_INSTRUCTION,
-            # tools=[order_status_tool],
-            tools=[
-                ask_vertex_retrieval,
-            ],
+        # self.agent = Agent(
+        #     name="customer_service_agent",
+        #     model=MODEL,
+        #     instruction=SYSTEM_INSTRUCTION,
+        #     # tools=[order_status_tool],
+        #     tools=[
+        #         ask_vertex_retrieval,
+        #     ],
+        # )
+
+        self.agent =  LlmAgent(
+            name = "coordinator_agent",
+            model= "gemini-2.5-flash",
+            instruction= retrieve_agent_prompt("coordinator"),
+            sub_agents=[ # Assign sub_agents here
+                symptom_agent,
+                emergency_agent,
+            ]
         )
 
         # Create session service

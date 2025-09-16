@@ -4,3 +4,4 @@ google-adk
 websockets
 python-dotenv
 llama_index
+langgraph
