@@ -5,3 +5,4 @@ websockets
 python-dotenv
 llama_index
 langgraph
+langchain-tavily

@@ -5,6 +5,7 @@ import logging
 import os
 import traceback
 from prompts import symptom_collect_prompt
+from subagents.symptomsAgent import symptom_agent
 
 # Import Google ADK components
 from google.adk.agents import Agent, LiveRequestQueue, LlmAgent
@@ -82,11 +83,11 @@ class MultimodalADKServer(BaseWebSocketServer):
 
         self.agent =  LlmAgent(
             name = "coordinator_agent",
-            model= "gemini-2.5-flash",
+            model= MODEL,
             instruction= retrieve_agent_prompt("coordinator"),
             sub_agents=[ # Assign sub_agents here
                 symptom_agent,
-                emergency_agent,
+                #ßemergency_agent,
             ]
         )
 
